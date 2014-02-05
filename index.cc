@@ -29,7 +29,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <set>
-#include <dirent.h> // directory header
 
 using namespace std;
 struct stat sb;
@@ -37,15 +36,6 @@ struct stat sb;
 set<int> generateTerms(char *filepath) {
   int x;
   set<int> result;
-  FILE *fp = fopen(filepath, "r");
-  while( fscanf(fp, "%d", &x) != EOF )
-    result.insert(x);
-  return result;
-}
-
-multiset<int> generateTerms2(char *filepath) {
-  int x;
-  multiset<int> result;
   FILE *fp = fopen(filepath, "r");
   while( fscanf(fp, "%d", &x) != EOF )
     result.insert(x);
@@ -89,7 +79,7 @@ char OpenFile(char *contentName, char *idName, char *timeName, char *databaseNam
 	Xapian::Document newdocument;
 
         // Generate the content for terms
-	multiset<int> doc_terms = generateTerms2(contentName);
+	multiset<int> doc_terms = generateTerms(contentName);
 
         // Put the time in the document
 	fscanf (fp_time, "%s ", Time);
