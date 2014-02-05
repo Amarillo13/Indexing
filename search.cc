@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     // Catch any Xapian::Error exceptions thrown
     try {
         // Make the database
-		Xapian::Database db(argv[1]);
+	Xapian::Database db(argv[1]);
 
         // Start an enquire session
         Xapian::Enquire enquire(db);
@@ -110,8 +110,8 @@ int main(int argc, char **argv)
                     if(x==100) break;
                     x++;
                     cout << "Document ID " << iter->type << "    \t" << iter->dates<< "\t"<<
-                                    iter->percent << "% [ " <<
-                                    iter->terms << "]\t" << "tot: " << iter->numb <<endl;
+                            iter->percent << "% [ " <<
+                            iter->terms << "]\t" << "tot: " << iter->numb <<endl;
                 }
             }
         }
