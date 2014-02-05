@@ -53,86 +53,85 @@ multiset<int> generateTerms2(char *filepath) {
 }
 
 char OpenFile(char *contentName, char *idName, char *timeName, char *databaseName){
-	FILE *fp_content;
-	FILE *fp_id;
-	FILE *fp_time;
+    	FILE *fp_content;
+    	FILE *fp_id;
+    	FILE *fp_time;
 
-	char *doc;
-    char *id;
-    char *time;
+    	char *doc;
+    	char *id;
+    	char *time;
 
-    int digit;
-    char Doc[50];
-    char Id[50];
-	char Time[20];
-    char temp_Doc[100000];
-    char temp_Id[50];
-    int i = 0;
-	int stat_key = 1;
-	int temp_no;
-    char ic[50]; //int to char
-    char x[50];
+    	int digit;
+    	char Doc[50];
+    	char Id[50];
+    	char Time[20];
+    	char temp_Doc[100000];
+    	char temp_Id[50];
+    	int i = 0;
+    	int stat_key = 1;
+    	int temp_no;
+    	char ic[50]; //int to char
+    	char x[50];
 
 	set <int>::iterator si;
 	if (((fp_content = fopen(contentName, "r"))== NULL)){ //check whether the file exists or not
 		printf("File not exists!!!\n");
-    return -1;
+    		return -1;
 	}
 	else{
 		fp_id = fopen(idName, "r");
 		fp_time = fopen(timeName, "r");
 
-		// Make the database
+	// Make the database
         Xapian::WritableDatabase database(databaseName, Xapian::DB_CREATE_OR_OPEN);
 
-		// Make the document
-		Xapian::Document newdocument;
+	// Make the document
+	Xapian::Document newdocument;
 
         // Generate the content for terms
-		multiset<int> doc_terms = generateTerms2(contentName);
+	multiset<int> doc_terms = generateTerms2(contentName);
 
         // Put the time in the document
-		fscanf (fp_time, "%s ", Time);
-		newdocument.add_value(4, Time);
+	fscanf (fp_time, "%s ", Time);
+	newdocument.add_value(4, Time);
 
-		// Put the terms into the document
+	// Put the terms into the document
         int t_id = 0;
-		for (si=doc_terms.begin(); si!=doc_terms.end();si++){
+	for (si=doc_terms.begin(); si!=doc_terms.end();si++){
             sprintf(ic, "%d", *si);
             newdocument.add_term(ic);
             t_id++;
         }
 
-        puts("FFFFF");
-		// Put the id and version
-		temp_Id[0]='\0';
-		while(fscanf (fp_id, "%s", Id) != EOF){
+	// Put the id and version
+	temp_Id[0]='\0';
+	while(fscanf (fp_id, "%s", Id) != EOF){
             strcat(temp_Id, Id); //combine the words
             strcat(temp_Id, " ");
         }
 
         // add doc_Id and ver_id into document in slot 1
-		newdocument.add_value(1, temp_Id);
+	newdocument.add_value(1, temp_Id);
 
-		// Add the document to the database
+	// Add the document to the database
         database.add_document(newdocument);
 
-		fclose(fp_content);
-		fclose(fp_id);
+	fclose(fp_content);
+	fclose(fp_id);
 	}
 }
 
 char listDir(char *path, char *databaseName)
 {
         FILE *file;
-		char str_content[100];
-		char str_id[100];
-		char str_time[100];
-		char statistic[100];
-		char temp[100];
-		char temp2[100];
-		char original[100];
-		int sta;
+	char str_content[100];
+	char str_id[100];
+	char str_time[100];
+	char statistic[100];
+	char temp[100];
+	char temp2[100];
+	char original[100];
+	int sta;
 
         sprintf(statistic, "%s/Statistics", path);
         if((file = fopen(statistic, "r")) != NULL){
@@ -158,23 +157,21 @@ char listDir(char *path, char *databaseName)
 int main(int argc, char **argv)
 {
 	// Simplest possible options parsing: we just require three or more
-    // parameters.
-    if(argc < 3) {
-        cout << "usage: " << argv[0] <<
-                " <path to database> <document data> <document terms>" << endl;
-        return 0;
-    }
-
-    puts("After reading...");
+    	// parameters.
+    	if(argc < 3) {
+        	cout << "usage: " << argv[0] <<
+                	" <path to database> <document data> <document terms>" << endl;
+        	return 0;
+    	}
 
 	// Catch any Xapian::Error exceptions thrown
-    try {
+    	try {
 		// read the directory
 		listDir(argv[2], argv[1]);
 
-    } catch(const Xapian::Error &error) {
-        cout << "Exception: "  << error.get_msg() << endl;
-    }
+    	} catch(const Xapian::Error &error) {
+	 	cout << "Exception: "  << error.get_msg() << endl;
+    	}
 
 	return 0;
 }
