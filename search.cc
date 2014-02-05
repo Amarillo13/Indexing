@@ -50,7 +50,6 @@ int main(int argc, char **argv)
     if (argc < 3) {
         cout << "usage: " << argv[0] <<
                 " <path to database> <search terms>" << endl;
-        //exit(1);
         return 0;
     }
 
@@ -70,10 +69,6 @@ int main(int argc, char **argv)
 
         // Give the query object to the enquire session
         enquire.set_query(query);
-        //The final parameter is False for ascending order, True for descending.
-        //keymaker->add_value(4, true);
-        //keymaker->add_value(0, false);
-        //enquire.set_sort_by_key_then_relevance(keymaker, true);
         enquire.set_sort_by_value_then_relevance(4, true);
 
         // Get the top 150 results of the query
@@ -87,7 +82,6 @@ int main(int argc, char **argv)
         Xapian::MSetIterator j;
         for (Xapian::MSetIterator i = matches.begin(); i != matches.end(); ++i)
         {
-            //if(x==2) break;
             j = i;
             Xapian::Document doc = i.get_document();
 
@@ -97,7 +91,6 @@ int main(int argc, char **argv)
 
             for(Xapian::TermIterator tx = doc.termlist_begin();tx != doc.termlist_end();++tx) {
               if( (*tx).compare(string(argv[2])) == 0) {
-                //cout << *tx << " : " << tx.get_wdf() << endl;
                 //try to make a vector terms
                 master.terms = doc.get_value(1);
                 master.numb = tx.get_wdf();
@@ -113,21 +106,14 @@ int main(int argc, char **argv)
             std::sort(svec.begin(), svec.end(), compareNumb);
             vector<struct Terms>::iterator iter = svec.begin();
             if( ++j == matches.end()){
-            for(iter; iter != svec.end(); ++iter){
-                //cout<<"Terms: "<<iter->terms<<"\tFreq: "<<iter->numb<<endl;
-                if(x==100) break;
-                x++;
-                cout << "Document ID " << iter->type << "    \t" << iter->dates<< "\t"<<
-                                iter->percent << "% [ " <<
-                                iter->terms << "]\t" << "tot: " << iter->numb <<endl;
+                for(iter; iter != svec.end(); ++iter){
+                    if(x==100) break;
+                    x++;
+                    cout << "Document ID " << iter->type << "    \t" << iter->dates<< "\t"<<
+                                    iter->percent << "% [ " <<
+                                    iter->terms << "]\t" << "tot: " << iter->numb <<endl;
+                }
             }
-            }
-
-
-            /*cout << "Document ID " << iter->terms << "    \t" << doc2.get_value(4)<< "\t"<<
-                                i.get_percent() << "% [ " <<
-                                doc2.get_value(1) << "]" <<endl;
-*/
         }
 
     } catch(const Xapian::Error &error) {
